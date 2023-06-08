@@ -62,7 +62,7 @@ const AuthShowcase: React.FC = () => {
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
     undefined, // no input
-    { enabled: sessionData?.user !== undefined },
+    { enabled: sessionData?.user !== undefined }
   );
 
   return (
@@ -71,12 +71,50 @@ const AuthShowcase: React.FC = () => {
         {sessionData && <span>Logged in as {sessionData.user?.name}</span>}
         {secretMessage && <span> - {secretMessage}</span>}
       </p>
-      <button
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
-        onClick={sessionData ? () => void signOut() : () => void signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
+      {sessionData ? (
+        <button
+          className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+          onClick={() =>void signOut()}
+        >
+          Sign out
+        </button>
+      ) : (
+        <div>
+          <button
+            className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+            onClick={() => popupCenter("/google-signin", "Sample Sign In")}
+          >
+            Sign In with Google
+          </button>
+        </div>
+      )}
     </div>
   );
+};
+const popupCenter = (url: string, title: string) => {
+  const dualScreenLeft = window.screenLeft ?? window.screenX;
+  const dualScreenTop = window.screenTop ?? window.screenY;
+
+  const width =
+    window.innerWidth ?? document.documentElement.clientWidth ?? screen.width;
+
+  const height =
+    window.innerHeight ??
+    document.documentElement.clientHeight ??
+    screen.height;
+
+  const systemZoom = width / window.screen.availWidth;
+
+  const left = (width - 500) / 2 / systemZoom + dualScreenLeft;
+  const top = (height - 550) / 2 / systemZoom + dualScreenTop;
+
+  const newWindow = window.open(
+    url,
+    title,
+    `width=${500 / systemZoom},height=${
+      550 / systemZoom
+    },top=${top},left=${left}`
+  );
+
+  newWindow?.focus();
 };
