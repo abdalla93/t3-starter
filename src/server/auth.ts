@@ -6,6 +6,7 @@ import {
   type DefaultSession,
 } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials"
 
 import { env } from "~/env.mjs";
 import { prisma } from "~/server/db";
@@ -51,7 +52,7 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: env.GOOGLE_CLIENT_ID,
       clientSecret: env.GOOGLE_CLIENT_SECRET,
-    })
+    }),
   ],
 };
 
